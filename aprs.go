@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 type APRSPacket struct {
@@ -36,6 +37,11 @@ type APRSPacket struct {
 func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	if input == "" {
 		e = fmt.Errorf("Could not parse the packet because the packet line is blank")
+		return p, e
+	}
+
+	if !strings.HasPrefix(input, ">") {
+		e = fmt.Errorf("This libary does not support this kind of packet.")
 		return p, e
 	}
 	return p, e
