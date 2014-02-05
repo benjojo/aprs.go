@@ -32,3 +32,8 @@ type APRSPacket struct {
 	Raincounter   string
 	Error         string
 }
+
+func ParseAPRSPacket() (p APRSPacket, e error) {
+
+	return p, e
+}
