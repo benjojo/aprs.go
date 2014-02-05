@@ -33,7 +33,10 @@ type APRSPacket struct {
 	Error         string
 }
 
-func ParseAPRSPacket() (p APRSPacket, e error) {
-
+func ParseAPRSPacket(input string) (p APRSPacket, e error) {
+	if input == "" {
+		e = fmt.Errorf("Could not parse the packet because the packet line is blank")
+		return p, e
+	}
 	return p, e
 }
