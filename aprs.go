@@ -31,7 +31,6 @@ type APRSPacket struct {
 	Luminosity    string
 	Snowfall      string
 	Raincounter   string
-	Error         string
 }
 
 func ParseAPRSPacket(input string) (p APRSPacket, e error) {
