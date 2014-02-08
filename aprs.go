@@ -97,7 +97,7 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		StrDegLatMin := fmt.Sprintf("%f", DegLatMin)
 		p.Latitude = fmt.Sprintf("%s%s", DegLatitude[:2], StrDegLatMin[1:len(StrDegLatMin)-1])
 
-		if Split[3] == "S" {
+		if SplitData[3] == "S" {
 			p.Latitude = fmt.Sprintf("-%s", p.Latitude)
 		}
 
@@ -112,7 +112,7 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		StrDegLonMin := fmt.Sprintf("%f", DegLonMin)
 		p.Longitude = fmt.Sprintf("%s%s", DegLongitude[:3], StrDegLonMin[1:len(StrDegLonMin)-1])
 
-		if Split[3] == "W" {
+		if SplitData[3] == "W" {
 			p.Longitude = fmt.Sprintf("-%s", p.Longitude)
 		}
 
