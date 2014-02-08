@@ -13,6 +13,7 @@ import (
 // * GPGGA
 // * New Mic-E
 // * Old Mic-E
+// * Location
 type APRSPacket struct {
 	Callsign      string // Done!
 	PacketType    string
@@ -139,5 +140,44 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		e = fmt.Errorf("Mic-E is currently not supported")
 		return p, e
 	}
+
+	// Test to see if its a location packet
+
+	// FirstChr = line.IndexOf(":/")  // With Timestamp
+	// SecondChr = line.IndexOf(":!") // Without Timestamp
+	// ThirdChr = line.IndexOf(":@")  // With Timestamp and APRS Messaging
+	// FourthChr = line.IndexOf(":=") // Without Timestamp and Messaging
+	LocationPtr := 0
+	TimestampPtr := trings.Index(input, ":!")
+	if strings.Index(input, ":@") { // With Timestamp and APRS Messaging
+		LocationPtr = strings.Index(input, ":@")
+	}
+
+	if strings.Index(input, ":=") { // Without Timestamp and Messaging
+		LocationPtr = strings.Index(input, ":=")
+	}
+
+	// Here is the if statement of literally fuck you
+	if (LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "H")) ||
+		(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "Z")) ||
+		(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "/")) ||
+		(TimestampPtr != -1 && LocationSlice(line, TimestampPtr, 9, "S")) ||
+		(TimestampPtr != -1 && LocationSlice(line, TimestampPtr, 9, "N")) {
+
+		p.PacketType = "Location"
+		if (LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "H")) ||
+			(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "Z")) ||
+			(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "/")) {
+			// Oh Christ this is looking complex
+			// p.GPSTime =
+
+		}
+	}
+
 	return p, e
+}
+
+func LocationSlice(line string, LocationPtr int64, ptr int64, cmp string) bool {
+	bit := strings.ToUpper(line[LocationPtr+ptr : (LocationPtr+ptr)+1])
+	return bit == cmp
 }
