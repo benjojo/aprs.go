@@ -1,5 +1,7 @@
 package main
 
+// This is a direct port of https://gist.github.com/benjojo/0124c7875113831a4274
+
 import (
 	"fmt"
 	"strconv"
@@ -83,6 +85,8 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 			return p, e
 		}
 		p.GPSTime = SplitData[1]
+
+		// Lat
 		DegLatitude := SplitData[2]
 		DegLatMin, e := strconv.ParseFloat(DegLatitude[2:2+len(DegLatitude)-2], 64)
 		if e != nil {
@@ -90,9 +94,28 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 			return p, e
 		}
 		DegLatMin = DegLatMin / 60
-		// Latitude = degLatitude.Substring(0, 2) + Convert.ToString(degLatMin).Substring(1, Convert.ToString(degLatMin).Length - 1);
 		StrDegLatMin := fmt.Sprintf("%f", DegLatMin)
 		p.Latitude = fmt.Sprintf("%s%s", DegLatitude[:2], StrDegLatMin[1:len(StrDegLatMin)-1])
+
+		if Split[3] == "S" {
+			p.Latitude = fmt.Sprintf("-%s", p.Latitude)
+		}
+
+		// Long
+		DegLongitude := SplitData[4]
+		DegLonMin, e := strconv.ParseFloat(DegLongitude[3:3+len(DegLongitude)-3], 64)
+		if e != nil {
+			e = fmt.Errorf("Could not decode the DegLonMin part of the GPGGA packet")
+			return p, e
+		}
+		DegLonMin = DegLonMin / 60
+		StrDegLonMin := fmt.Sprintf("%f", DegLonMin)
+		p.Longitude = fmt.Sprintf("%s%s", DegLongitude[:3], StrDegLonMin[1:len(StrDegLonMin)-1])
+
+		if Split[3] == "W" {
+			p.Longitude = fmt.Sprintf("-%s", p.Longitude)
+		}
+
 	}
 
 	return p, e
