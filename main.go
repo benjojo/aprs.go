@@ -16,8 +16,9 @@ func main() {
 	for _, v := range lines {
 		p, e := ParseAPRSPacket(v)
 		if e != nil {
-			panic("Failed to recode packet" + string(e.Error()))
+			fmt.Println("Failed to recode packet" + string(e.Error()))
+		} else {
+			fmt.Println(p)
 		}
-		fmt.Println(p)
 	}
 }
