@@ -58,14 +58,15 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 
 	LocationOfStatusMarker := strings.Index(input, ":>")
 	LocationOfNormalMarker := strings.Index(input, ">")
+
 	if LocationOfStatusMarker > LocationOfNormalMarker {
 		p.PacketType = "Status Report"
-		RawArray := []byte(input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+(len(input)-(LocationOfStatusMarker-2))])
+		RawArray := []byte(input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+(len(input)-LocationOfStatusMarker-2)])
 		if len(RawArray) > 6 && strings.ToLower(string(RawArray[6])) == "z" {
 			p.GPSTime = input[LocationOfStatusMarker+2 : LocationOfStatusMarker+8]
-			p.Status = input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+len(input)-9]
+			p.Status = input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+len(input)-LocationOfStatusMarker-9]
 		} else {
-			p.Status = input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+len(input)-2]
+			p.Status = input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+len(input)-LocationOfStatusMarker-2]
 		}
 	}
 
