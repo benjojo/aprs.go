@@ -1,4 +1,4 @@
-package main
+package aprsgo
 
 // This is a direct port of https://gist.github.com/benjojo/0124c7875113831a4274
 

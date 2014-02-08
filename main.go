@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/benjojo/aprs.go"
 	"io/ioutil"
 	"strings"
 )
