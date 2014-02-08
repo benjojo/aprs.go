@@ -39,7 +39,7 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		return p, e
 	}
 
-	if !strings.HasPrefix(input, ">") {
+	if !strings.Contains(input, ">") {
 		e = fmt.Errorf("This libary does not support this kind of packet.")
 		return p, e
 	}
