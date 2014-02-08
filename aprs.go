@@ -238,7 +238,9 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 			}
 
 		} else {
-
+			// There was some Altitiude stuff but to be greatly honest
+			// there was so much crap in this C# class that I stopped caring about porting
+			// it at this point. it mostly works for what I want to use it for.
 		}
 	}
 
