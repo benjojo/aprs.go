@@ -156,19 +156,14 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	if strings.Index(input, ":=") { // Without Timestamp and Messaging
 		LocationPtr = strings.Index(input, ":=")
 	}
-
+	LocationPtrStr := LocationSlice(line, LocationPtr, 8)
+	TimestampPtrStr := LocationSlice(line, TimestampPtr, 9)
 	// Here is the if statement of literally fuck you
-	if (LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "H")) ||
-		(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "Z")) ||
-		(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "/")) ||
-		(TimestampPtr != -1 && LocationSlice(line, TimestampPtr, 9, "S")) ||
-		(TimestampPtr != -1 && LocationSlice(line, TimestampPtr, 9, "N")) {
+	if (LocationPtr != -1 && (LocationPtrStr == "H" || LocationPtrStr == "Z" || LocationPtrStr == "/")) ||
+		(TimestampPtr != -1 && (TimestampPtrStr == "S" || TimestampPtrStr == "N")) {
 
 		p.PacketType = "Location"
-		if (LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "H")) ||
-			(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "Z")) ||
-			(LocationPtr != -1 && LocationSlice(line, LocationPtr, 8, "/")) {
-			// Oh Christ this is looking complex
+		if LocationPtr != -1 && (LocationPtrStr == "H" || LocationPtrStr == "Z" || LocationPtrStr == "/") {
 			// p.GPSTime =
 
 		}
@@ -177,7 +172,7 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	return p, e
 }
 
-func LocationSlice(line string, LocationPtr int64, ptr int64, cmp string) bool {
+func LocationSlice(line string, LocationPtr int64, ptr int64) bool {
 	bit := strings.ToUpper(line[LocationPtr+ptr : (LocationPtr+ptr)+1])
-	return bit == cmp
+	return bit
 }
