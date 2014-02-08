@@ -50,7 +50,7 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	RouteString := CommaParts[0]
 	RouteParts := strings.Split(RouteString, ">")
 	if len(RouteParts) != 2 {
-		e = fmt.Errorf("There was more than one > in the route part of the packet")
+		e = fmt.Errorf("There was not one > in the route part of the packet, dunno how to decode this")
 		return p, e
 	}
 	p.Callsign = RouteParts[0]
