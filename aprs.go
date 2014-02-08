@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// PacketType can be:
+// * Status Report
 type APRSPacket struct {
 	Callsign      string // Done!
 	PacketType    string
@@ -53,6 +55,19 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	}
 	p.Callsign = RouteParts[0]
 	p.Destination = RouteParts[1]
+
+	LocationOfStatusMarker := strings.Index(input, ":>")
+	LocationOfNormalMarker := strings.Index(input, ">")
+	if LocationOfStatusMarker > LocationOfNormalMarker {
+		p.PacketType = "Status Report"
+		RawArray := []byte(input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+(len(input)-(LocationOfStatusMarker-2))])
+		if len(RawArray) > 6 && strings.ToLower(string(RawArray[6])) == "z" {
+			p.GPSTime = input[LocationOfStatusMarker+2 : LocationOfStatusMarker+8]
+			p.Status = input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+len(input)-9]
+		} else {
+			p.Status = input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+len(input)-2]
+		}
+	}
 
 	return p, e
 }
