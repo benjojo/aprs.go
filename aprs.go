@@ -116,6 +116,12 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 			p.Longitude = fmt.Sprintf("-%s", p.Longitude)
 		}
 
+		f, e := strconv.ParseFloat(SplitData[9], 64)
+		if e != nil {
+			e = fmt.Errorf("Could not decode the Altitude part of the GPGGA packet")
+			return p, e
+		}
+		p.Altitude = fmt.Sprintf("%f", f)
 	}
 
 	return p, e
