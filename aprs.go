@@ -128,13 +128,13 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 
 	// Test if the packet is a Mic-E packet
 	if strings.Index(input, ":`") != -1 || strings.Index(input, ":'") != -1 {
-		MicEPtr := 0
+		// MicEPtr := 0
 		if strings.Index(input, ":`") != -1 {
 			p.PacketType = "New Mic-E"
-			MicEPtr = strings.Index(input, ":`")
+			// MicEPtr = strings.Index(input, ":`")
 		} else {
 			p.PacketType = "Old Mic-E"
-			MicEPtr = strings.Index(input, ":'")
+			// MicEPtr = strings.Index(input, ":'")
 		}
 		e = fmt.Errorf("Mic-E is currently not supported")
 		return p, e
