@@ -148,31 +148,34 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	// ThirdChr = line.IndexOf(":@")  // With Timestamp and APRS Messaging
 	// FourthChr = line.IndexOf(":=") // Without Timestamp and Messaging
 	LocationPtr := 0
-	TimestampPtr := trings.Index(input, ":!")
-	if strings.Index(input, ":@") { // With Timestamp and APRS Messaging
+	TimestampPtr := strings.Index(input, ":!")
+	if strings.Index(input, ":@") != -1 { // With Timestamp and APRS Messaging
 		LocationPtr = strings.Index(input, ":@")
 	}
 
-	if strings.Index(input, ":=") { // Without Timestamp and Messaging
+	if strings.Index(input, ":=") != -1 { // Without Timestamp and Messaging
 		LocationPtr = strings.Index(input, ":=")
 	}
-	LocationPtrStr := LocationSlice(line, LocationPtr, 8)
-	TimestampPtrStr := LocationSlice(line, TimestampPtr, 9)
-	// Here is the if statement of literally fuck you
+	LocationPtrStr := LocationSlice(input, int64(LocationPtr), 8)
+	TimestampPtrStr := LocationSlice(input, int64(TimestampPtr), 9)
+
 	if (LocationPtr != -1 && (LocationPtrStr == "H" || LocationPtrStr == "Z" || LocationPtrStr == "/")) ||
 		(TimestampPtr != -1 && (TimestampPtrStr == "S" || TimestampPtrStr == "N")) {
 
 		p.PacketType = "Location"
 		if LocationPtr != -1 && (LocationPtrStr == "H" || LocationPtrStr == "Z" || LocationPtrStr == "/") {
-			// p.GPSTime =
-
+			p.GPSTime = input[TimestampPtr+2 : TimestampPtr+8]
+		} else {
+			TimestampPtr = TimestampPtr - 7
 		}
+		p.Symbol = fmt.Sprintf("%s%s", input[LocationPtr+17:LocationPtr+18], input[LocationPtr+27:LocationPtr+28])
+
 	}
 
 	return p, e
 }
 
-func LocationSlice(line string, LocationPtr int64, ptr int64) bool {
+func LocationSlice(line string, LocationPtr int64, ptr int64) string {
 	bit := strings.ToUpper(line[LocationPtr+ptr : (LocationPtr+ptr)+1])
 	return bit
 }
