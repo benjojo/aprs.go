@@ -48,7 +48,7 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	p = APRSPacket{}
 	CommaParts := strings.Split(input, ",")
 	RouteString := CommaParts[0]
-	RouteParts := strings.Split(RouteString, ">")[0]
+	RouteParts := strings.Split(RouteString, ">")
 	if len(RouteParts) != 2 {
 		e = fmt.Errorf("There was more than one > in the route part of the packet")
 		return p, e
