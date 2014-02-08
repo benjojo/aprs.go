@@ -14,6 +14,7 @@ import (
 // * New Mic-E
 // * Old Mic-E
 // * Location
+// * Weather Report
 type APRSPacket struct {
 	Callsign      string // Done!
 	PacketType    string
@@ -202,6 +203,11 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 			p.Longitude = fmt.Sprintf("-%s", p.Longitude)
 		}
 
+		// Is this packet a weather report?
+		if input[LocationPtr+27:LocationPtr+28] == "_" && input[LocationPtr+31:LocationPtr+32] == "/" {
+			// Yes it is.
+			p.PacketType = "Weather Report"
+		}
 	}
 
 	return p, e
