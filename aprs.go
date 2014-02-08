@@ -29,18 +29,18 @@ type APRSPacket struct {
 	Speed         string
 	Destination   string // Done!
 	Status        string
-	WindDirection string
-	WindSpeed     string
-	WindGust      string
-	WeatherTemp   string
-	RainHour      string
-	RainDay       string
-	RainMidnight  string
-	Humidity      string
-	Pressure      string
-	Luminosity    string
-	Snowfall      string
-	Raincounter   string
+	WindDirection string // Done!
+	WindSpeed     string // Done!
+	WindGust      string // Done!
+	WeatherTemp   string // Done!
+	RainHour      string // Done!
+	RainDay       string // Done!
+	RainMidnight  string // Done!
+	Humidity      string // Done!
+	Pressure      string // Done!
+	Luminosity    string // Done!
+	Snowfall      string // Done!
+	Raincounter   string // Done!
 }
 
 func ParseAPRSPacket(input string) (p APRSPacket, e error) {
@@ -143,11 +143,6 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 	}
 
 	// Test to see if its a location packet
-
-	// FirstChr = line.IndexOf(":/")  // With Timestamp
-	// SecondChr = line.IndexOf(":!") // Without Timestamp
-	// ThirdChr = line.IndexOf(":@")  // With Timestamp and APRS Messaging
-	// FourthChr = line.IndexOf(":=") // Without Timestamp and Messaging
 	LocationPtr := 0
 	TimestampPtr := strings.Index(input, ":!")
 	if strings.Index(input, ":@") != -1 { // With Timestamp and APRS Messaging
