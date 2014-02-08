@@ -6,7 +6,7 @@ import (
 )
 
 type APRSPacket struct {
-	Callsign      string
+	Callsign      string // Done!
 	PacketType    string
 	Latitude      string
 	Longitude     string
@@ -17,7 +17,7 @@ type APRSPacket struct {
 	Heading       string
 	PHG           string
 	Speed         string
-	Destination   string
+	Destination   string // Done!
 	Status        string
 	WindDirection string
 	WindSpeed     string
@@ -43,5 +43,16 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		e = fmt.Errorf("This libary does not support this kind of packet.")
 		return p, e
 	}
+	p = APRSPacket{}
+	CommaParts := strings.Split(input, ",")
+	RouteString := CommaParts[0]
+	RouteParts := strings.Split(RouteString, ">")[0]
+	if len(RouteParts) != 2 {
+		e = fmt.Errorf("There was more than one > in the route part of the packet")
+		return p, e
+	}
+	p.Callsign = RouteParts[0]
+	p.Destination = RouteParts[1]
+
 	return p, e
 }
