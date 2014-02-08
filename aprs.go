@@ -180,9 +180,9 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		DegLatMin = (DegLatMin / 60)
 
 		DegLatMinStr := fmt.Sprintf("%f", DegLatMin)
-		p.Latitude = fmt.Sprintf("%s%s", input[LocationPtrStr+9:LocationPtrStr+11], DegLatMinStr[1:len(DegLatMinStr)-1])
+		p.Latitude = fmt.Sprintf("%s%s", input[LocationPtr+9:LocationPtr+11], DegLatMinStr[1:len(DegLatMinStr)-1])
 
-		if input[LocationPtrStr+16:LocationPtrStr+17] == "S" {
+		if input[LocationPtr+16:LocationPtr+17] == "S" {
 			p.Latitude = fmt.Sprintf("-%s", p.Latitude)
 		}
 
@@ -196,9 +196,9 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		DegLonMin = (DegLonMin / 60)
 
 		DegLonMinStr := fmt.Sprintf("%f", DegLonMin)
-		p.Longitude = fmt.Sprintf("%s%s", input[LocationPtrStr+19:LocationPtrStr+21], DegLatMinStr[1:len(DegLatMinStr)-1])
+		p.Longitude = fmt.Sprintf("%s%s", input[LocationPtr+19:LocationPtr+21], DegLonMinStr[1:len(DegLonMinStr)-1])
 
-		if input[LocationPtrStr+16:LocationPtrStr+17] == "S" {
+		if input[LocationPtr+16:LocationPtr+17] == "S" {
 			p.Longitude = fmt.Sprintf("-%s", p.Longitude)
 		}
 
