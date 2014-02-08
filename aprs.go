@@ -170,6 +170,38 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		}
 		p.Symbol = fmt.Sprintf("%s%s", input[LocationPtr+17:LocationPtr+18], input[LocationPtr+27:LocationPtr+28])
 
+		// Lat
+		DegLatMin, e := strconv.ParseFloat(input[LocationPtr+11:LocationPtr+16], 64)
+		if e != nil {
+			// Go bang
+			e = fmt.Errorf("Could not make DegLatMin a float")
+			return p, e
+		}
+		DegLatMin = (DegLatMin / 60)
+
+		DegLatMinStr := fmt.Sprintf("%f", DegLatMin)
+		p.Latitude = fmt.Sprintf("%s%s", input[LocationPtrStr+9:LocationPtrStr+11], DegLatMinStr[1:len(DegLatMinStr)-1])
+
+		if input[LocationPtrStr+16:LocationPtrStr+17] == "S" {
+			p.Latitude = fmt.Sprintf("-%s", p.Latitude)
+		}
+
+		// Long
+		DegLonMin, e := strconv.ParseFloat(input[LocationPtr+21:LocationPtr+26], 64)
+		if e != nil {
+			// Go bang
+			e = fmt.Errorf("Could not make DegLonMin a float")
+			return p, e
+		}
+		DegLonMin = (DegLonMin / 60)
+
+		DegLonMinStr := fmt.Sprintf("%f", DegLonMin)
+		p.Longitude = fmt.Sprintf("%s%s", input[LocationPtrStr+19:LocationPtrStr+21], DegLatMinStr[1:len(DegLatMinStr)-1])
+
+		if input[LocationPtrStr+16:LocationPtrStr+17] == "S" {
+			p.Longitude = fmt.Sprintf("-%s", p.Longitude)
+		}
+
 	}
 
 	return p, e
