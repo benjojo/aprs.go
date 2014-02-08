@@ -144,7 +144,8 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 
 	// Test to see if its a location packet
 	LocationPtr := 0
-	TimestampPtr := strings.Index(input, ":!")
+	TimestampPtr := strings.Index(input, ":!") // If you leave out this line alot of the errors go away
+	// TODO: Look into why the above case breaks alot around the DegLatMin area.
 	if strings.Index(input, ":@") != -1 { // With Timestamp and APRS Messaging
 		LocationPtr = strings.Index(input, ":@")
 	}
