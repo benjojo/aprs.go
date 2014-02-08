@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
 // PacketType can be:
 // * Status Report
+// * GPGGA
 type APRSPacket struct {
 	Callsign      string // Done!
 	PacketType    string
@@ -68,6 +70,29 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		} else {
 			p.Status = input[LocationOfStatusMarker+2 : (LocationOfStatusMarker+2)+len(input)-LocationOfStatusMarker-2]
 		}
+	}
+
+	// Test if the packet is a GPGGA packet
+	if strings.Contains(input, ":$GPGGA,") {
+		p.PacketType = "GPGGA"
+		GPGGALocation := strings.Index(input, ":$GPGGA,")
+		RawData := input[GPGGALocation : GPGGALocation+(len(input)-GPGGALocation)]
+		SplitData := strings.Split(RawData, ",")
+		if len(SplitData) < 9 {
+			e = fmt.Errorf("There was not enough data inside the GPGGA packet to decode it")
+			return p, e
+		}
+		p.GPSTime = SplitData[1]
+		DegLatitude := SplitData[2]
+		DegLatMin, e := strconv.ParseFloat(DegLatitude[2:2+len(DegLatitude)-2], 64)
+		if e != nil {
+			e = fmt.Errorf("Could not decode the DegLatMin part of the GPGGA packet")
+			return p, e
+		}
+		DegLatMin = DegLatMin / 60
+		// Latitude = degLatitude.Substring(0, 2) + Convert.ToString(degLatMin).Substring(1, Convert.ToString(degLatMin).Length - 1);
+		StrDegLatMin := fmt.Sprintf("%f", DegLatMin)
+		p.Latitude = fmt.Sprintf("%s%s", DegLatitude[:2], StrDegLatMin[1:len(StrDegLatMin)-1])
 	}
 
 	return p, e
