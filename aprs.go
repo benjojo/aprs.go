@@ -207,6 +207,43 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		if input[LocationPtr+27:LocationPtr+28] == "_" && input[LocationPtr+31:LocationPtr+32] == "/" {
 			// Yes it is.
 			p.PacketType = "Weather Report"
+			p.WindDirection = input[LocationPtr+28 : LocationPtr+31]
+			p.WindSpeed = input[LocationPtr+32 : LocationPtr+35]
+			WeatherStr := input[LocationPtr+27:]
+
+			if strings.Index(WeatherStr, "g") != -1 {
+				p.WindGust = input[strings.Index(WeatherStr, "g")+27+1 : (strings.Index(WeatherStr, "g")+27)+4]
+			}
+			if strings.Index(WeatherStr, "t") != -1 {
+				p.WeatherTemp = input[strings.Index(WeatherStr, "t")+27+1 : (strings.Index(WeatherStr, "t")+27)+4]
+			}
+			if strings.Index(WeatherStr, "r") != -1 {
+				p.RainHour = input[strings.Index(WeatherStr, "r")+27+1 : (strings.Index(WeatherStr, "r")+27)+4]
+			}
+			if strings.Index(WeatherStr, "p") != -1 {
+				p.RainDay = input[strings.Index(WeatherStr, "p")+27+1 : (strings.Index(WeatherStr, "p")+27)+4]
+			}
+			if strings.Index(WeatherStr, "P") != -1 {
+				p.RainMidnight = input[strings.Index(WeatherStr, "P")+27+1 : (strings.Index(WeatherStr, "P")+27)+4]
+			}
+			if strings.Index(WeatherStr, "h") != -1 {
+				p.Humidity = input[strings.Index(WeatherStr, "h")+27+1 : (strings.Index(WeatherStr, "h")+27)+4]
+			}
+			if strings.Index(WeatherStr, "b") != -1 {
+				p.Pressure = input[strings.Index(WeatherStr, "b")+27+1 : (strings.Index(WeatherStr, "b")+27)+4]
+			}
+			if strings.Index(WeatherStr, "L") != -1 {
+				p.Luminosity = input[strings.Index(WeatherStr, "L")+27+1 : (strings.Index(WeatherStr, "L")+27)+4]
+			}
+			if strings.Index(WeatherStr, "s") != -1 {
+				p.Snowfall = input[strings.Index(WeatherStr, "s")+27+1 : (strings.Index(WeatherStr, "s")+27)+4]
+			}
+			if strings.Index(WeatherStr, "#") != -1 {
+				p.Raincounter = input[strings.Index(WeatherStr, "#")+27+1 : (strings.Index(WeatherStr, "#")+27)+4]
+			}
+
+		} else {
+
 		}
 	}
 
