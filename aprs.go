@@ -11,6 +11,8 @@ import (
 // PacketType can be:
 // * Status Report
 // * GPGGA
+// * New Mic-E
+// * Old Mic-E
 type APRSPacket struct {
 	Callsign      string // Done!
 	PacketType    string
@@ -124,5 +126,18 @@ func ParseAPRSPacket(input string) (p APRSPacket, e error) {
 		p.Altitude = fmt.Sprintf("%f", f)
 	}
 
+	// Test if the packet is a Mic-E packet
+	if strings.Index(input, ":`") != -1 || strings.Index(input, ":'") != -1 {
+		MicEPtr := 0
+		if strings.Index(input, ":`") != -1 {
+			p.PacketType = "New Mic-E"
+			MicEPtr = strings.Index(input, ":`")
+		} else {
+			p.PacketType = "Old Mic-E"
+			MicEPtr = strings.Index(input, ":'")
+		}
+		e = fmt.Errorf("Mic-E is currently not supported")
+		return p, e
+	}
 	return p, e
 }
